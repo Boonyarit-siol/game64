@@ -1,0 +1,5 @@
+ARJS:  		  https://ar-js-org.github.io/AR.js-Docs/
+AFrame:    		  https://aframe.io/
+3D Model Animation:    https://mixamo.com
+Make Human:   	  http://www.makehumancommunity.org/
+HowlerJS:		  https://howlerjs.com/

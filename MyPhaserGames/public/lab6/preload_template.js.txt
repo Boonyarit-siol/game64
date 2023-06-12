@@ -1,0 +1,25 @@
+class Preloader extends Phaser.Scene {
+
+    constructor ()
+    {
+        super('Preloader');
+    }
+
+    preload ()
+    {
+        this.facebook.once('startgame', this.startGame, this);
+    
+       // Load your asset here //
+
+      ////////////////////////////////////////////////////////////        
+        this.facebook.showLoadProgress(this);
+
+    }
+
+    startGame ()
+    {
+        FBInstant.setLoadingProgress(100);
+        this.scene.start('MainGame');
+    }
+
+}

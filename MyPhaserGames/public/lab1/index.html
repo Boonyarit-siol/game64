@@ -1,0 +1,150 @@
+</body>
+</html><html>
+    <head>
+        <title> Mario Coin Dash : Dev  </title>
+        <script src="phaser.js"></script>
+    </head>
+    <body>
+        <h1> Mario coin dash : Dev </h1>
+        <script>
+            var config = {
+                type: Phaser.AUTO,
+                width: 1280,
+                height: 720,
+                scene : {
+                    preload : preload,
+                    create : create,
+                    update : update,
+                }
+            }
+            var game = new Phaser.Game(config);
+
+            var player;
+            var coin;
+            var co2;
+
+            var bgm; var coin_pikup_audio; var footsteps_audio;
+
+            function preload() {
+                this.load.image('galax','assets/galax.png');
+
+                this.load.image('coin1','assets/coin-frame-1.png');
+                this.load.image('coin2','assets/coin-frame-2.png');
+                this.load.image('coin3','assets/coin-frame-3.png');
+                this.load.image('coin4','assets/coin-frame-4.png');
+
+                this.load.spritesheet('player', 'assets/player.png',
+                                    {frameWidth: 64 ,frameHeight: 72, startFrame: 0, endFrame: 19});
+                
+                this.load.audio('bgm', 'assets/bgm.ogg');
+                this.load.audio('coin_pickup', 'assets/coin_pickup.ogg');
+                this.load.audio('footsteps', 'assets/footsteps.wav');
+            }
+
+            function create() {
+                //Animetion create section
+                this.anims.create({
+                    key : 'down_anim',
+                    frames : this.anims.generateFrameNumbers('player', {start: 0, and: 4}),
+                    frameRate : 10, repeat:-1,
+                });
+
+                this.anims.create({
+                    key : 'left_anim',
+                    frames : this.anims.generateFrameNumbers('player', {start: 5, and: 9}),
+                    frameRate : 10, repeat:-1,
+                });
+
+                this.anims.create({
+                    key : 'right_anim',
+                    frames : this.anims.generateFrameNumbers('player', {start: 10, and: 14}),
+                    frameRate : 10, repeat:-1,
+                });
+
+                this.anims.create({
+                    key : 'up_anim',
+                    frames : this.anims.generateFrameNumbers('player', {start: 15, and: 19}),
+                    frameRate : 10, repeat:-1,
+                });
+
+                this.anims.create({
+                    key :'coin_blink',
+                    frames : [{key: 'coin1'}, {key: 'coin2'}, {key: 'coin3'}, {key: 'coin4'}],
+                    frameRate : 10, repeat:-1,
+                });
+                
+                this.anims.create({
+                    key :'co2_blink',
+                    frames : [{key: 'coin1'}, {key: 'coin2'}, {key: 'coin3'}, {key: 'coin4'}],
+                    frameRate : 10, repeat:-1,
+                });
+
+                //Scene creation
+                this.add.image(640, 360, 'galax');
+                player = this.add.sprite(100, 100, 'player');
+
+                coin = this.add.sprite(300, 300, 'coin');
+                coin.play('coin_blink');
+                coin.setScale(0.5, 0.5);
+
+                co2 = this.add.sprite(300, 300, 'co2');
+                co2.play('coin_blink');
+                co2.setScale(0.5, 0.5);
+
+                bgm = this.sound.add('bgm');
+                bgm.play({loop:true});
+
+                coin_pikup_audio = this.sound.add('coin_pickup');
+                footsteps_audio = this.sound.add('footsteps');
+            }
+           
+            function processInput(cursors) {
+                var speed_constant = 3;
+                var x_direction = 0;
+                var y_direction = 0;
+                if(cursors.up.isDown) {y_direction -= 1; player.anims.play('up_anim', true);}
+                if(cursors.down.isDown) {y_direction += 1; player.anims.play('down_anim', true);}
+                if(cursors.left.isDown) {x_direction -= 1; player.anims.play('left_anim', true);}
+                if(cursors.right.isDown) {x_direction += 1; player.anims.play('right_anim', true);}
+
+                if(x_direction != 0 || y_direction != 0) {
+                    if((x_direction * speed_constant) > 0 && (x_direction *speed_constant)<1200&&(y_direction *speed_constant))
+                    player.x += x_direction * speed_constant;
+                    player.y += y_direction * speed_constant;
+                    if(!footsteps_audio.isPlaying) {footsteps_audio.play()};
+                }else{
+                    player.anims.stop();
+                }
+            }
+
+            function checkOverlap(spriteA, spriteB) {
+                var boundsA = spriteA.getBounds();
+                var boundsB = spriteB.getBounds();
+                return Phaser.Geom.Intersects.RectangleToRectangle(boundsA, boundsB);
+            }
+            
+            function processCollision(){
+                if(checkOverlap(player, coin)){
+                    coin.x = Math.random() * 1280;
+                    coin.y = Math.random() * 720;
+                   
+                    if(!coin_pikup_audio.isPlaying) {coin_pikup_audio.play()};
+                }
+                if(checkOverlap(player, co2)){
+                    co2.x = Math.random() * 1280;
+                    co2.y = Math.random() * 720;
+                    if(!coin_pikup_audio.isPlaying) {coin_pikup_audio.play()};
+            }
+        }
+         
+            
+            function update() {
+                cursors = this.input.keyboard.createCursorKeys();
+                processInput(cursors);
+                processCollision();
+                
+
+            } 
+        </script>
+    </body>
+</html>

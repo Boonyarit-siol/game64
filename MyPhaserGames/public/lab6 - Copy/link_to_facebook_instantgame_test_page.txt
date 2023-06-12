@@ -1,0 +1,3 @@
+https://www.facebook.com/embed/instantgames/[AppID]/player?game_url=https://localhost/
+
+Example:    https://www.facebook.com/embed/instantgames/526189148678650/player?game_url=https://localhost/lab6

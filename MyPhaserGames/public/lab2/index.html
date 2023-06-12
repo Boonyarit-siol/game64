@@ -1,0 +1,379 @@
+</body>
+</html><html>
+    <head>
+        <title> Mario Coin Dash : Dev  </title>
+        <script src="phaser.js"></script>
+    </head>
+    <body>
+        <h1> <center>- POKEMON GO -  </center></h1>
+        <script>
+            var config = {
+                type: Phaser.AUTO,
+                width: 1280,
+                height: 720,
+                scene : {
+                    preload : preload,
+                    create : create,
+                    update : update,
+                }
+            }
+            var game = new Phaser.Game(config);
+
+            var pokemon;
+            var poke_array = [];
+            const POKE_SIZE = 4;
+            var mons_array = [];
+            const MONS_SIZE = 3;
+
+            var monst_array = [];
+            const MONST_SIZE = 3;
+
+            var opens; var coin_pikup_audio; var footsteps_audio; var attack; var pikachu;
+            //HUD_Variable
+            var score_HUD;
+            var score = 0;
+
+            var time_HUD;
+            var time = 5;
+            
+          
+            var gameover_HUD;
+            var is_game_start;
+            var startgame_HUD;
+            var gamename_HUD;
+            
+            function preload() { 
+                this.load.image('was','assets/was.png');
+
+                this.load.image('poke1','assets/poke1.png');
+                this.load.image('poke2','assets/poke2.png');
+                this.load.image('poke3','assets/poke3.png');
+                this.load.image('poke4','assets/poke4.png');
+
+                this.load.image('mons','assets/mons.png');
+                this.load.image('monst','assets/monst.png');
+                this.load.spritesheet('pokemon', 'assets/pokemon.png',
+                                    {frameWidth: 64 ,frameHeight: 72, startFrame: 0, endFrame: 15});
+                
+                this.load.audio('opensa', 'assets/opensa.mp3');
+                this.load.audio('attack','assets/attack.mp3');
+                this.load.audio('coin_pickup', 'assets/coin_pickup.mp3');
+                this.load.audio('footsteps', 'assets/footsteps.mp3');
+                this.load.audio('pikachu', 'assets/pikachu.mp3');
+
+            }
+
+            function create() {
+                //Animetion create section
+                this.anims.create({
+                    key : 'down_anim',
+                    frames : this.anims.generateFrameNumbers('pokemon', {start: 0, and: 3}),
+                    frameRate : 10, repeat:-1,
+                });
+
+                this.anims.create({
+                    key : 'left_anim',
+                    frames : this.anims.generateFrameNumbers('pokemon', {start: 4, and: 7}),
+                    frameRate : 10, repeat:-1,
+                });
+
+                this.anims.create({
+                    key : 'right_anim',
+                    frames : this.anims.generateFrameNumbers('pokemon', {start: 8, and: 11}),
+                    frameRate : 10, repeat:-1,
+                });
+
+                this.anims.create({
+                    key : 'up_anim',
+                    frames : this.anims.generateFrameNumbers('pokemon', {start: 12, and: 15}),
+                    frameRate : 10, repeat:-1,
+                });
+
+                this.anims.create({
+                    key :'poke1',
+                    frames : [{key: 'poke1'}, {key: 'poke1'}, {key: 'poke1'}, {key: 'poke1'}],
+                    frameRate : 10, repeat:-1,
+                });
+                
+               
+                this.anims.create({
+                    key :'poke2',
+                    frames : [{key: 'poke2'}, {key: 'poke2'}, {key: 'poke2'}, {key: 'poke2'}],
+                    frameRate : 10, repeat:-1,
+                });
+              
+                this.anims.create({
+                    key :'poke4',
+                    frames : [{key: 'poke4'}, {key: 'poke4'}, {key: 'poke4'}, {key: 'poke4'}],
+                    frameRate : 10, repeat:-1,
+                });
+                
+
+                //Scene creation
+                this.add.image(640, 360, 'was');
+                pokemon = this.add.sprite(100, 100, 'pokemon');
+                
+                for (let i=0; i<MONS_SIZE;i++ ){
+                     let x_rand = Math.random() *1280;
+                     let y_rand = Math.random() *720;
+
+                     let mons = this.add.sprite(x_rand,y_rand,'mons');
+                     mons.setScale(0.1,0.1);
+                     mons_array.push(mons);
+                     
+                }
+                for (let i=0; i<MONST_SIZE;i++ ){
+                     let x_rand = Math.random() *1280;
+                     let y_rand = Math.random() *720;
+
+                     let monst = this.add.sprite(x_rand,y_rand,'monst');
+                     monst.setScale(0.1,0.1);
+                     monst_array.push(monst);
+                     
+                }
+
+                for(let i =0;i < POKE_SIZE;i++){
+                    let x_rand = Math.random()*1280;
+                    let y_rand = Math.random()*720;
+
+                     let poke = this.add.sprite(x_rand, y_rand, 'poke1');
+                    
+                     
+                    poke.play('poke1');
+                    
+                    poke.setScale(0.5, 0.5);
+
+                    poke_array.push(poke);
+                }
+                for(let i =0;i < POKE_SIZE;i++){
+                    let x_rand = Math.random()*1280;
+                    let y_rand = Math.random()*720;
+
+                     let poke = this.add.sprite(x_rand, y_rand, 'poke2');
+                    
+                     
+                    poke.play('poke2');
+                    
+                    poke.setScale(0.5, 0.5);
+
+                    poke_array.push(poke);
+                }
+                for(let i =0;i < POKE_SIZE;i++){
+                    let x_rand = Math.random()*1280;
+                    let y_rand = Math.random()*720;
+
+                     let poke = this.add.sprite(x_rand, y_rand, 'poke3');
+                    
+                     
+                    poke.play('poke3');
+                    
+                    poke.setScale(0.5, 0.5);
+
+                    poke_array.push(poke);
+                }
+                for(let i =0;i < POKE_SIZE;i++){
+                    let x_rand = Math.random()*1280;
+                    let y_rand = Math.random()*720;
+
+                     let poke = this.add.sprite(x_rand, y_rand, 'poke4');
+                    
+                     
+                    poke.play('poke4');
+                    
+                    poke.setScale(0.5, 0.5);
+
+                    poke_array.push(poke);
+                }
+                
+                
+                opensa = this.sound.add('opensa');
+                opensa.play({loop:true});
+
+                coin_pikup_audio = this.sound.add('coin_pickup');
+                footsteps_audio = this.sound.add('footsteps');
+                attack_audio = this.sound.add('attack');
+                pikachu_audio = this.sound.add('pikachu');
+                 //HUD Creation ทับหน้าจอ
+                 score_HUD =  this.add.text(16,16,'Score : '+score , {fontSize : '32px',fill: '#FA8072'});
+                 time_HUD =  this.add.text(16,45,'Time: '+time+'s' , {fontSize : '32px',fill: '#9400D3'});
+                 gameover_HUD =  this.add.text(200,250,' - Gameover Point YOUR - '+score+'points',  {fontSize : '60px',fill: '#A52A2A',});
+                 gameover_HUD.setVisible(false);
+                
+                 gamename_HUD = this.add.text(370,20,'< PokeMon Game >',  {fontSize : '62px',fill: '#000099',fontStyle:'bold'})
+
+                startgame_HUD = this.add.text(490,200,' - PLAY GAME - ',  {fontSize : '40px',fill: '#6A5ACD',fontStyle:'bold'})
+                startgame_HUD.setInteractive();
+                startgame_HUD.on('pointerover',
+                        () => {
+                            startgame_HUD.setStyle({fill : "#FF00FF"});
+                        }
+                );
+                startgame_HUD.on('pointerout',
+                        () => {
+                            startgame_HUD.setStyle({fill : "1E90FF"});
+                        }
+                );
+                startgame_HUD.on('pointerdown',
+                        () => {
+                            score =0;
+                            time =5;
+                            is_game_start = true;
+                            score_HUD.setText("Score:"+score);
+                            gamename_HUD.setVisible(false);
+                            startgame_HUD.setVisible(false);
+                            gameover_HUD.setVisible(false);
+                        }
+                );
+                 is_game_start = false;
+            
+                    }
+            function processInput(cursors) {
+                var speed_constant = 3;
+                var x_direction = 0;
+                var y_direction = 0;
+                
+               
+                if(cursors.left.isDown)     {x_direction -= 1; pokemon.anims.play('left_anim', true);}
+                if(cursors.right.isDown)    {x_direction += 1; pokemon.anims.play('right_anim', true);}
+
+                if(cursors.up.isDown)       {
+                    y_direction -= 1; 
+                    if(!(cursors.left.isDown || cursors.right.isDown)) {
+                        pokemon.anims.play('up_anim',true);
+                    }
+                }
+                    if (cursors.down.isDown)  {
+                        y_direction += 1;
+                        if(!(cursors.left.isDown || cursors.right.isDown)) {
+                            pokemon.anims.play('down_anim',true);
+                        }
+                    }
+
+
+                if(x_direction != 0 || y_direction != 0) {
+                    pokemon.x += x_direction * speed_constant;
+                    pokemon.y += y_direction * speed_constant;
+
+                    if(pokemon.x<0) {pokemon.x = 0;}
+                    if(pokemon.x >1280) {pokemon.x = 1280;}
+
+                    if(pokemon.y<0) {pokemon.y = 0;}
+                    if(pokemon.y>720) {pokemon.y = 720;}
+                    if(!footsteps_audio.isPlaying) {footsteps_audio.play()};
+                }else{
+                    pokemon.anims.stop();
+                }
+            }
+
+            function checkOverlap(spriteA, spriteB) {
+                var boundsA = spriteA.getBounds();
+                var boundsB = spriteB.getBounds();
+                return Phaser.Geom.Intersects.RectangleToRectangle(boundsA, boundsB);
+            }
+            
+            function processCollision(){
+              poke_array.forEach((poke1)=> {
+                if(checkOverlap(pokemon, poke1)){
+                    poke1.x = Math.random() * 1280;
+                    poke1.y = Math.random() * 720;
+                   
+                 coin_pikup_audio.play() ;
+
+                 score +=5;
+                 score_HUD.setText("Score:"+score);
+
+                }
+            })
+            poke_array.forEach((poke2)=> {
+                if(checkOverlap(pokemon, poke2)){
+                    poke2.x = Math.random() * 1280;
+                    poke2.y = Math.random() * 720;
+                   
+                pikachu_audio.play();
+
+                 score +=5;
+                 score_HUD.setText("Score:"+score);
+
+                }
+            })
+            poke_array.forEach((poke3)=> {
+                if(checkOverlap(pokemon, poke3)){
+                    poke3.x = Math.random() * 1280;
+                    poke3.y = Math.random() * 720;
+                   
+                 coin_pikup_audio.play() ;
+
+                 score +=5;
+                 score_HUD.setText("Score:"+score);
+
+                }
+            })
+            poke_array.forEach((poke4)=> {
+                if(checkOverlap(pokemon, poke4)){
+                    poke4.x = Math.random() * 1280;
+                    poke4.y = Math.random() * 720;
+                   
+                 coin_pikup_audio.play() ;
+
+                 score +=5;
+                 score_HUD.setText("Score:"+score);
+
+                }
+            })
+             monst_array.forEach( (monst) => {
+
+                if( checkOverlap(pokemon,monst)) {
+                    monst.x =Math.random() * 1280;
+                    monst.y =Math.random() * 1280; 
+                    
+                    score -=10;
+                    attack_audio.play();
+                    score_HUD.setText("Score:"+score);
+                }
+
+             });
+             mons_array.forEach( (mons) => {
+
+        if( checkOverlap(pokemon,mons)) {
+        mons.x =Math.random() * 1280;
+        mons.y =Math.random() * 1280; 
+    
+        score -=10;
+        attack_audio.play();
+        score_HUD.setText("Score:"+score);
+    }
+
+});
+               
+        }
+         function processHUD(delta){
+                deltasec =  delta/1000
+                time  -=deltasec;
+
+                time_HUD.setText("Time:"+ Math.round(time,2)+"s")
+
+                    if(time <= 0){
+                        gameover_HUD.setVisible(true)
+                        gameover_HUD.setText('Gameover,You got'+score+'points ');
+                        
+                        startgame_HUD.setVisible(true);
+                        startgame_HUD.setText("Click here again",  {fontSize : '40px',fill: '#6A5ACD',fontStyle:'bold'});
+                       
+                        is_game_start = false;
+                        score = 0;
+                        time = 5;
+                    }
+         }
+            
+            function update(time,delta) {
+                     if(is_game_start){
+                cursors = this.input.keyboard.createCursorKeys();
+                processInput(cursors);
+                processCollision();
+                processHUD(delta);
+                     }
+
+            } 
+        </script>
+    </body>
+</html>

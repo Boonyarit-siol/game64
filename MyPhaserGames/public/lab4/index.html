@@ -1,0 +1,36 @@
+<html>
+<head>
+    <title> Garden QUEst by BrighT</title>
+    <script src = "phaser.js"></script>
+</head>
+<body>
+    <h1>Garden Quest </h1>
+    <script src = level1.js></script> 
+    <script src = level2.js></script> 
+    <script src = slime.js></script> 
+    <script src = gameover.js></script>
+    <script src = comment.js></script>
+    <script>
+        var config = {
+            type : Phaser.AUTO,
+            width : 1280,
+            height :720,
+            physics: {
+                default :  "arcade",
+                arcade : {
+                    gravity : { y : 0 }
+                }
+            },
+            scene : [ Comment,Level1,Level2,GameOver ]
+        }
+        var game = new Phaser.Game(config);
+        var opensa; var victory; var battle;
+      
+        
+       
+    </script>
+    
+</body>
+
+
+</html>
